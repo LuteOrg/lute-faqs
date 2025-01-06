@@ -1,11 +1,7 @@
-The Lute manual.
+The Lute FAQ.
+
+Deployed to https://luteorg.github.io/lute-faqs/ with GitHub actions.
 
 Written using mdbook (https://rust-lang.github.io/mdBook).
 
-## Development
-
-install mdbook
-
-On mac, `brew install mdbook`
-
-Start it: `mdbook serve --open`
+[Development notes](./docs/development.md)

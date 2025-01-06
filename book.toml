@@ -3,7 +3,21 @@ authors = ["Jeff Zohrab"]
 language = "en"
 multilingual = false
 src = "src"
-title = "Lute manual"
+title = "Lute FAQs"
 
 [build]
 create-missing = true
+extra-watch-dirs = [ "css" ]
+
+[output.html]
+no-section-label = true
+git-repository-url = "https://github.com/LuteOrg/lute-faqs/"
+default-theme = "rust"
+additional-css = ["css/custom.css"]
+site-url = "/lute-faqs/"
+
+[output.html.fold]
+enable = true
+
+# [output.linkcheck]
+# optional = true
