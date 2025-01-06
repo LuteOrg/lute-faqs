@@ -177,7 +177,7 @@
 <div style="break-before: page; page-break-before: always;"></div><h1 id="can-i-run-lute-on-my-phone-or-pad"><a class="header" href="#can-i-run-lute-on-my-phone-or-pad">Can I run Lute on my phone or pad?</a></h1>
 <p>Lute doesn't have a dedicated mobile offline client.  It needs a server to run the backend python code.</p>
 <p>You can still use Lute on your iPhone/iPad/whatever, though.</p>
-<p>One option is to set up a <a href="faq/setup/./web-server.html">web server</a> somewhere in the cloud, and access that.  (That might be tricky, I won't be able to help with that.)</p>
+<p>One option is to set up a <a href="setup/./web-server.html">web server</a> somewhere in the cloud, and access that.  (That might be tricky, I won't be able to help with that.)</p>
 <p>If your computer is running Lute, and it's on a Wifi network, you should be able to access it if your phone is on that same network:</p>
 <ul>
 <li>start Lute.  It will say something like <code>Lute is running.  Open a web browser, and go to: http://localhost:5001</code>.  The last 4 digits are the port number.</li>
@@ -298,7 +298,7 @@ http {
 <div style="break-before: page; page-break-before: always;"></div><h1 id="migrating-from-v2-to-v3"><a class="header" href="#migrating-from-v2-to-v3">Migrating from v2 to v3</a></h1>
 <h2 id="database-and-images"><a class="header" href="#database-and-images">Database and images</a></h2>
 <p>If you're already using Lute v2 (written in PHP), and want to migrate to v3, it's pretty straightforward: you just have to move some files around.</p>
-<p>Step 1. <a href="faq/setup/../install/install.html">install Lute v3</a>, and start it up.  Then:</p>
+<p>Step 1. <a href="setup/../install/install.html">install Lute v3</a>, and start it up.  Then:</p>
 <h3 id="for-non-docker-users"><a class="header" href="#for-non-docker-users">For non-Docker users</a></h3>
 <ol start="2">
 <li>In the top right corner of the home screen, click About &gt; Version and software info</li>
@@ -362,9 +362,9 @@ http {
 <p><a href="https://en.wikipedia.org/wiki/UTF-8">https://en.wikipedia.org/wiki/UTF-8</a>: "UTF-8 is a variable-length character encoding standard used for electronic communication."  It defines how characters are actually written to disk, essentially.</p>
 </div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="i-cant-click-on-words-in-the-reading-screen"><a class="header" href="#i-cant-click-on-words-in-the-reading-screen">I can't click on words in the reading screen</a></h1>
-<p>Though Lute was developed primarily for desktop use, some users connect to Lute on their mobile devices (see <a href="faq/reading/../setup/mobile-support.html">Mobile support</a> and <a href="http://localhost:3000/usage/reading-on-mobile.html">Reading on mobile</a>).  Lute tries to set up a desktop or mobile environment automatically, but sometimes it's hard to determine if you're on mobile or not[^1].  Sometimes it's not even possible: for example, you may have a regular laptop with an additional external touchscreen ...</p>
+<p>Though Lute was developed primarily for desktop use, some users connect to Lute on their mobile devices (see <a href="reading/../setup/mobile-support.html">Mobile support</a> and <a href="http://localhost:3000/usage/reading-on-mobile.html">Reading on mobile</a>).  Lute tries to set up a desktop or mobile environment automatically, but sometimes it's hard to determine if you're on mobile or not[^1].  Sometimes it's not even possible: for example, you may have a regular laptop with an additional external touchscreen ...</p>
 <p>If your reading screen isn't responding to clicks or touches, you may need to tell Lute what kinds of screen interactions you need.  In the slideout menu of the reading menu, you can do that:</p>
-<img width="285" alt="image" src="faq/reading/../../assets/faq/reading/screen_interactions.png">
+<img width="285" alt="image" src="reading/../assets/reading/screen_interactions.png">
 <p>[^1] See <a href="https://stackoverflow.com/questions/72502079/how-can-i-check-if-the-device-which-is-using-my-website-is-a-mobile-user-or-no">StackOverflow</a> for the definition of futility.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="why-cant-i-change-a-term"><a class="header" href="#why-cant-i-change-a-term">Why can't I change a Term?</a></h1>
 <p>Lute won't let you change a Term's actual text once it has been created and saved, you can only change the case of existing characters.  For example, you could change "CAT" to "Cat" or "cat", but not to "dog".</p>
@@ -383,7 +383,7 @@ http {
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="where-are-my-new-terms-sentences"><a class="header" href="#where-are-my-new-terms-sentences">Where are my new Term's sentences?</a></h1>
 <p>Lute shows sentences for a Term and its siblings when you click the Sentences link on the Term form, but it only includes sentences for pages marked as "read".  Pages are marked as "read" when you click either of the links at the bottom of the reading page:</p>
-<img width="285" alt="image" src="faq/terms/../../assets/faq/terms/sentences_marked_read.png">
+<img width="285" alt="image" src="terms/../assets/terms/sentences_marked_read.png">
 <p>(The green checkmark also changes all unknown terms to well-known.)</p>
 <p>Lute only includes sentences from pages marked "read" for a few reasons:</p>
 <ul>
@@ -412,16 +412,16 @@ http {
 <p>Still others just use status 1-3.</p>
 <p>So, pick whatever you feel is best, don't sweat it too much, and just start reading.  You can always revise term statuses as you go.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="can-i-import-data-from-other-systems"><a class="header" href="#can-i-import-data-from-other-systems">Can I import data from other systems?</a></h1>
-<p>You can import data into Lute via <a href="faq/../usage/terms/bulk-term-import.html">bulk term import</a>, you just have to get your data into .csv file format.</p>
+<p>You can import data into Lute via <a href="../usage/terms/bulk-term-import.html">bulk term import</a>, you just have to get your data into .csv file format.</p>
 <h2 id="importing-data-from-lwt"><a class="header" href="#importing-data-from-lwt">Importing data from LWT</a></h2>
 <p>LWT has an "export" feature:</p>
-<p><img src="faq/../assets/faq/import_from_lwt.png" alt="image" /></p>
+<p><img src="../assets/import_from_lwt.png" alt="image" /></p>
 <p>Use "Export ALL Terms (TSV)" to export a tab-separated value file.  The file may get downloaded as a ".txt" file, in which case, rename it to ".tsv".</p>
 <p>A sample row of data exported from LWT looks like this:</p>
 <pre><code>gato	cat	Tengo un {gato}		1	Spanish	20
 </code></pre>
 <p>You can then import that file into something like <a href="https://docs.google.com/spreadsheets/u/0/">Google Sheets</a>, and prepare it for import.</p>
-<p>As the <a href="faq/../usage/terms/bulk-term-import.html">bulk term import</a> page says:</p>
+<p>As the <a href="../usage/terms/bulk-term-import.html">bulk term import</a> page says:</p>
 <ul>
 <li>The first line of the CSV file must have the field headings: language, term</li>
 <li>The first line of the CSV file may also have any of these headings: translation, parent, status, tags, pronunciation</li>
