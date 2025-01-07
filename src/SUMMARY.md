@@ -33,11 +33,16 @@
 - [Why can't I change a Term?](./terms/terms-cannot-be-changed-once-created.md)
 - [Where are my new Term's sentences?](./terms/sentences-only-shown-when-page-is-read.md)
 - [How should I use statuses?](./terms/term-statuses.md)
+- [What are Term parents?](./terms/term-parents.md)
+
+# Development
+
+- [How is development work prioritized?](./dev/prioritizing-dev-work.md)
+- [Can I contribute to Lute's code?](./dev/contributing.md)
 
 # Misc
 
 - [Can I import data from other systems?](./import-from-other-systems.md)
 - [Why doesn't Lute have flashcards, or an SRS?](./why-no-flashcards.md)
-- [How is development work prioritized?](./prioritizing-dev-work.md)
 - [Why is this free?](./free.md)
 
