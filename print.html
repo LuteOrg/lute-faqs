@@ -411,6 +411,62 @@ http {
 </ul>
 <p>Still others just use status 1-3.</p>
 <p>So, pick whatever you feel is best, don't sweat it too much, and just start reading.  You can always revise term statuses as you go.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="what-are-term-parents"><a class="header" href="#what-are-term-parents">What are Term parents?</a></h1>
+<p>"Term parents" are a way to:</p>
+<ul>
+<li>simplify your Term data management in Lute.</li>
+<li>help you build your own "mental map" of whatever language you're studying.</li>
+</ul>
+<p>When reading English in Lute, you might see words like <em>break</em>, <em>broke</em>, and <em>broken</em>.  These are all different forms of the word <em>break</em>.  You can enter in "break" as the parent, track basic data there, like an image and definition, and that's used for popups etc. while reading.  You don't have to enter the same data for all the "child terms" -- that would be tedious.</p>
+<p>Sometimes, parents are useful to indicate very strong relationships between words as well.  Examples:</p>
+<ul>
+<li>"kitten" - "cat"</li>
+<li>"gatito" - "gato" (Spanish)</li>
+<li>"Krankenhaus" - "krank" and "Haus" (German)</li>
+</ul>
+<p>In these cases one "parent term" might refer to conjugations (<em>break</em> to <em>broken</em>), as well as other obvious joins (<em>break</em> to <em>unbreakable</em>).</p>
+<h2 id="why-call-it-a-parent-and-not-a-lemma-or-root-form"><a class="header" href="#why-call-it-a-parent-and-not-a-lemma-or-root-form">Why call it a "parent", and not a "lemma" or "root form"?</a></h2>
+<p>Good question.  From the above example, "break" is referred to as the "lemma" - aka the "canonical form", or "dictionary form"[^1].  But to me, that doesn't quite fit how my mind organizes the language -- with multiple parents and word families.</p>
+<h2 id="so-how-should-i-use-this"><a class="header" href="#so-how-should-i-use-this">So, how should I use this?</a></h2>
+<p>There are no hard-and-fast rules.  I mainly use "parent terms" for conjugations, and then I add in extra information if needed.</p>
+<p>For example, as a basic German learner, I might have:</p>
+<ul>
+<li>gehen - to go (parent term)
+<ul>
+<li>ging, with tag "past"</li>
+<li>gegangen, with tag "participle"</li>
+</ul>
+</li>
+</ul>
+<p>As a more advanced Spanish learner, I add the dozens of Spanish verb forms (quiero, quise, qerría, quisiera ...) as child terms of the root, and I sometimes link words I feel belong together, just for fun (e.g., "ternura" is a child term of "tierno").</p>
+<hr />
+<p><a href="https://en.wikipedia.org/wiki/Lemma_(morphology)">Wikipedia: Lemma_(morphology)</a> - [^1]</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="how-is-development-work-prioritized"><a class="header" href="#how-is-development-work-prioritized">How is development work prioritized?</a></h1>
+<p><em>Variations on this:</em></p>
+<ul>
+<li>where's the roadmap?</li>
+<li>what's the long-term plan?</li>
+<li>can you add feature X?</li>
+<li>why was feature Y added before feature Z?</li>
+</ul>
+<p>These are all great questions, and at the moment there's really not a good answer in the normal "product" sense.</p>
+<p>The goal is for Lute, or something a lot like it, to become a default viable tool for a large user base.  At the moment, the steps for getting there are not planned or roadmapped like a regular product would be: good planning takes a lot of time and energy.  Lute's free and open source, so I and others work on it as we can<sup class="footnote-reference"><a href="#testing">1</a></sup>.</p>
+<p>Lute's got a big backlog of issues and ideas.  You may be wondering why your small request has been sitting in the queue since like <em>forever</em>.  There are some criteria I use to pick what to work on:</p>
+<ul>
+<li><strong>Relative size of work:</strong> how fast/easy it is to design, code, test, and document.  Sometimes small-seeming things aren't feasible.  E.g., "Couldn't you just query the database and tell me how many unknown words are in my book?"  No, unfortunately, because of the way that Lute stores data.  (It seems like it would be easy, right?  But it's not.)  Some requests are intertwined with others, or fundamentally don't follow Lute's technical design.  All good, but big changes take time.</li>
+<li><strong>User impact:</strong> when I was coding just for me, this was easy.  But now with many users, I try to take that into account.</li>
+<li><strong>Fun and usefulness for me personally:</strong> This keeps me motivated, and ensures that Lute doesn't have any obvious jankiness.</li>
+<li><strong>Code and architecture quality:</strong> Since Lute should be open source and hackable, it should be clear.  Though I've tried to keep things sane, in some places it's tough.  So this kind of work (refactoring: improving the quality of existing code) is important.</li>
+<li><strong>Differentiators:</strong> there are a few things that could make a big difference to learning.  With Lute, term images and parent terms were two of the initial things that drove me to write it in the first place.  I think that there are others as well: "word families", "sentence notes", and of course AI integration ... all of these might just be personal projects and thoughts though, I'm not sure!</li>
+</ul>
+<p>Lute's open source, so anyone is welcome to make forks and tweak it for their own learning and fun.  But most of us want to just <em>get on with it</em>.</p>
+<div class="footnote-definition" id="testing"><sup class="footnote-definition-label">1</sup>
+<p>"Work on it as we can" sounds chaotic.  To counteract this chaos, Lute has a decent set of automated tests and checks to ensure that the code is viable.</p>
+</div>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="can-i-contribute-to-lutes-code"><a class="header" href="#can-i-contribute-to-lutes-code">Can I contribute to Lute's code?</a></h1>
+<p>Yes please!</p>
+<p>Lute is supposed to be open source and free software, so you can do what you'd like with it.</p>
+<p>If you want to have your work be part of the "official" Lute releases, check out the <a href="https://github.com/LuteOrg/lute-v3/wiki">Lute wiki</a>.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="can-i-import-data-from-other-systems"><a class="header" href="#can-i-import-data-from-other-systems">Can I import data from other systems?</a></h1>
 <p>You can import data into Lute via <a href="../usage/terms/bulk-term-import.html">bulk term import</a>, you just have to get your data into .csv file format.</p>
 <h2 id="importing-data-from-lwt"><a class="header" href="#importing-data-from-lwt">Importing data from LWT</a></h2>
@@ -456,28 +512,6 @@ http {
 <p>Lute is open-sourced software, though, so if someone feels a burning need to implement an SRS in Lute, they are welcome to do it.  For it to be included in the main Lute package, the code would need to pass the various quality checks, and would also need to have sufficient testing and documentation (user docs and technical docs).  It could also be written as a standalone app that interfaces with the Lute database, or perhaps via an API.</p>
 <div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
 <p>Spaced Repetition Software</p>
-</div>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="how-is-development-work-prioritized"><a class="header" href="#how-is-development-work-prioritized">How is development work prioritized?</a></h1>
-<p><em>Variations on this:</em></p>
-<ul>
-<li>where's the roadmap?</li>
-<li>what's the long-term plan?</li>
-<li>can you add feature X?</li>
-<li>why was feature Y added before feature Z?</li>
-</ul>
-<p>These are all great questions, and at the moment there's really not a good answer in the normal "product" sense.</p>
-<p>The goal is for Lute, or something a lot like it, to become a default viable tool for a large user base.  At the moment, the steps for getting there are not planned or roadmapped like a regular product would be: good planning takes a lot of time and energy.  Lute's free and open source, so I and others work on it as we can<sup class="footnote-reference"><a href="#testing">1</a></sup>.</p>
-<p>Lute's got a big backlog of issues and ideas.  You may be wondering why your small request has been sitting in the queue since like <em>forever</em>.  There are some criteria I use to pick what to work on:</p>
-<ul>
-<li><strong>Relative size of work:</strong> how fast/easy it is to design, code, test, and document.  Sometimes small-seeming things aren't feasible.  E.g., "Couldn't you just query the database and tell me how many unknown words are in my book?"  No, unfortunately, because of the way that Lute stores data.  (It seems like it would be easy, right?  But it's not.)  Some requests are intertwined with others, or fundamentally don't follow Lute's technical design.  All good, but big changes take time.</li>
-<li><strong>User impact:</strong> when I was coding just for me, this was easy.  But now with many users, I try to take that into account.</li>
-<li><strong>Fun and usefulness for me personally:</strong> This keeps me motivated, and ensures that Lute doesn't have any obvious jankiness.</li>
-<li><strong>Code and architecture quality:</strong> Since Lute should be open source and hackable, it should be clear.  Though I've tried to keep things sane, in some places it's tough.  So this kind of work (refactoring: improving the quality of existing code) is important.</li>
-<li><strong>Differentiators:</strong> there are a few things that could make a big difference to learning.  With Lute, term images and parent terms were two of the initial things that drove me to write it in the first place.  I think that there are others as well: "word families", "sentence notes", and of course AI integration ... all of these might just be personal projects and thoughts though, I'm not sure!</li>
-</ul>
-<p>Lute's open source, so anyone is welcome to make forks and tweak it for their own learning and fun.  But most of us want to just <em>get on with it</em>.</p>
-<div class="footnote-definition" id="testing"><sup class="footnote-definition-label">1</sup>
-<p>"Work on it as we can" sounds chaotic.  To counteract this chaos, Lute has a decent set of automated tests and checks to ensure that the code is viable.</p>
 </div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="why-is-this-free"><a class="header" href="#why-is-this-free">Why is this free?</a></h1>
 <p>Lute is and will always remain free for a few reasons.</p>
