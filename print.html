@@ -198,6 +198,29 @@ BACKUP_PATH: /full/path/to/backup/folder
 <p>When Lute runs, it uses this config file, and will write all of its data in the folder specified in the DATAPATH.</p>
 <h2 id="docker"><a class="header" href="#docker">Docker</a></h2>
 <p>Docker users should change their docker-compose.yml to map the USB key folder to the mounted /lute/data directory.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="can-i-deploy-lute-on-nixos"><a class="header" href="#can-i-deploy-lute-on-nixos">Can I deploy Lute on NixOS?</a></h1>
+<p>Deploy Lute on NixOS in three simple steps using <a href="https://github.com/aksiksi/compose2nix">compose2nix</a>.</p>
+<h2 id="1-create-docker-composeyml"><a class="header" href="#1-create-docker-composeyml">1. Create <code>docker-compose.yml</code></a></h2>
+<pre><code class="language-yaml">name: 'lute'
+services:
+  lute:
+    image: jzohrab/lute3:latest
+    ports:
+      - 5006:5001
+    volumes:
+      - /var/lib/lute/data:/lute_data
+      - /var/lib/lute/backup:/lute_backup
+</code></pre>
+<h2 id="2-convert-to-nixos-module"><a class="header" href="#2-convert-to-nixos-module">2. Convert to NixOS Module</a></h2>
+<pre><code class="language-bash">$ nix run github:aksiksi/compose2nix
+</code></pre>
+<h2 id="3-import-the-module"><a class="header" href="#3-import-the-module">3. Import the Module</a></h2>
+<p>Add to your NixOS configuration:</p>
+<pre><code class="language-nix">imports = [
+  ./docker-compose.nix
+];
+</code></pre>
+<p>That's it! NixOS will handle all the necessary setup, including creating and setting permissions for the directories, when you rebuild your configuration.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="can-i-make-lute-secure"><a class="header" href="#can-i-make-lute-secure">Can I make Lute secure?</a></h1>
 <p>Lute doesn't come with authentication, so if you want to add security, the easiest way to do that is with a server that acts as a gatekeeper to the app (a reverse proxy).  The easiest way to do this is with Docker compose.</p>
 <blockquote>
