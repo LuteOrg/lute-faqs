@@ -1,8 +1,9 @@
-# How to Deploy Lute on NixOS
+# Can I deploy Lute on NixOS?
 
-Deploy Lute on NixOS in three simple steps using compose2nix.
+Deploy Lute on NixOS in three simple steps using [compose2nix](https://github.com/aksiksi/compose2nix).
 
-## 1. Create docker-compose.yml
+## 1. Create `docker-compose.yml`
+
 ```yaml
 name: 'lute'
 services:
@@ -16,11 +17,13 @@ services:
 ```
 
 ## 2. Convert to NixOS Module
+
 ```bash
 $ nix run github:aksiksi/compose2nix
 ```
 
 ## 3. Import the Module
+
 Add to your NixOS configuration:
 ```nix
 imports = [

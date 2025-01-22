@@ -9,6 +9,7 @@
 - [Can I run Lute on a private web server?](./setup/web-server.md)
 - [Can I run Lute on my phone or pad?](./setup/mobile-support.md)
 - [Can I store Lute data on a USB key?](./setup/usb.md)
+- [Can I deploy Lute on NixOS?](./setup/nix.md)
 - [Can I make Lute secure?](./setup/adding-basic-auth.md)
 - [Is there an online version of Lute?](./setup/online-lute.md)
 - [How can I migrate from Lute v2 to v3?](./setup/v2-to-v3.md)
