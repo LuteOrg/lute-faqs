@@ -179,6 +179,127 @@ services:
 ];
 </code></pre>
 <p>That's it! NixOS will handle all the necessary setup, including creating and setting permissions for the directories, when you rebuild your configuration.</p>
+<h1 id="updating-under-nixos"><a class="header" href="#updating-under-nixos">Updating under NixOS</a></h1>
+<p>If you install using docker/podman, you can update as root using</p>
+<pre><code class="language-bash">$ podman pull lute3:latest
+</code></pre>
+<p>and then restarting the system service or server</p>
+<p>if you want to do it automatically, here is a nix module to do so:</p>
+<pre><code class="language-nix">{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; let
+  cfg = config.services.containerUpdater;
+in {
+  options.services.containerUpdater = {
+    enable = mkEnableOption "automatic container updates";
+
+    updateTime = mkOption {
+      type = types.str;
+      default = "Mon 02:00";
+      description = "When to run the container updates (systemd calendar format)";
+    };
+
+    extraFlags = mkOption {
+      type = types.listOf types.str;
+      default = [];
+      description = "Additional flags to pass to podman pull";
+    };
+
+    containers = mkOption {
+      type = types.listOf types.str;
+      default = [];
+      description = "List of specific containers to update. If empty, updates all containers.";
+    };
+
+    restartContainers = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Whether to restart containers after updating";
+    };
+  };
+
+  config = mkIf cfg.enable {
+    systemd.services.containerUpdater = {
+      description = "Update container images";
+      path = [pkgs.podman];
+      script = ''
+        # Function to update containers
+        update_containers() {
+          local containers=()
+
+          # If specific containers are specified, use those
+          if [ ''${#containerList[@]} -gt 0 ]; then
+            containers=("''${containerList[@]}")
+          else
+            # Otherwise get all running containers
+            while IFS= read -r line; do
+              containers+=("$line")
+            done &lt; &lt;(podman ps -a --format="{{.Image}}" | sort -u)
+          fi
+
+          # Update each container
+          for image in "''${containers[@]}"; do
+            echo "Updating container image: $image"
+            podman pull ''${pullFlags[@]} "$image"
+
+            if [ "$RESTART_CONTAINERS" = "true" ]; then
+              container_ids=$(podman ps -q --filter "ancestor=$image")
+              if [ -n "$container_ids" ]; then
+                echo "Restarting containers using image: $image"
+                echo "$container_ids" | xargs -r podman restart
+              fi
+            fi
+          done
+        }
+
+        # Set up environment variables
+        declare -a containerList=(${escapeShellArgs cfg.containers})
+        declare -a pullFlags=(${escapeShellArgs cfg.extraFlags})
+        RESTART_CONTAINERS="${boolToString cfg.restartContainers}"
+
+        # Run the update
+        update_containers
+      '';
+
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = false;
+      };
+    };
+
+    systemd.timers.containerUpdater = {
+      wantedBy = ["timers.target"];
+      timerConfig = {
+        OnCalendar = cfg.updateTime;
+        Persistent = true;
+        Unit = "containerUpdater.service";
+      };
+    };
+  };
+}
+
+</code></pre>
+<p>Just import it into your configuration,</p>
+<p>and then set the following options:</p>
+<pre><code class="language-nix">{ config, pkgs, ... }:
+{
+  imports = [ ./container-updater.nix ];
+  
+  services.containerUpdater = {
+    enable = true;
+    containers = [ "lute3:latest"  ];  # Specific containers to update
+
+    # Optional configurations:
+    # updateTime = "Mon 02:00";  # When to run updates
+    # extraFlags = [  ];  # Additional podman pull flags
+    # restartContainers = true;  # Automatically restart containers after update
+  };
+}
+</code></pre>
 
                     </main>
 
