@@ -20,19 +20,22 @@ jobs:
           # mdbook-version: '0.4.10'
           mdbook-version: 'latest'
 
-      - name: Add link checker
-        run: |
-          mkdir -p mdbook-linkcheck
-          pushd mdbook-linkcheck
-          curl -L https://github.com/Michael-F-Bryan/mdbook-linkcheck/releases/latest/download/mdbook-linkcheck.x86_64-unknown-linux-gnu.zip -o mdbook-linkcheck.zip
-          unzip mdbook-linkcheck.zip
-          chmod +x mdbook-linkcheck
-          popd
+      # DISABLING link checks.
+      # Was getting GH error
+      # mdbook: /lib/x86_64-linux-gnu/libc.so.6: version `GLIBC_2.33' not found (required by mdbook)
+      # and prior to that I was _unable_ to get mdbook-linkcheck to work ...
+      # it would check the book, but would generate an empty site.
+      #    export PATH=$PWD/mdbook-linkcheck:$PATH
+      ### - name: Add link checker
+      ###   run: |
+      ###     mkdir -p mdbook-linkcheck
+      ###     pushd mdbook-linkcheck
+      ###     curl -L https://github.com/Michael-F-Bryan/mdbook-linkcheck/releases/latest/download/mdbook-linkcheck.x86_64-unknown-linux-gnu.zip -o mdbook-linkcheck.zip
+      ###     unzip mdbook-linkcheck.zip
+      ###     chmod +x mdbook-linkcheck
+      ###     popd
 
       - run: |
-          # I was _unable_ to get mdbook-linkcheck to work ...
-          # it would check the book, but would generate an empty site.
-          # export PATH=$PWD/mdbook-linkcheck:$PATH
           mdbook build
 
       - name: Deploy
