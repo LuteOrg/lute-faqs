@@ -17,6 +17,7 @@
 # Languages
 
 - [Can you add language X?](./language/add-a-language.md)
+- [Can I add a custom font for a language?](./language/add-custom-font.md)
 
 # Books
 
