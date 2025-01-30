@@ -465,6 +465,23 @@ http {
 <div style="break-before: page; page-break-before: always;"></div><h1 id="can-you-add-language-x"><a class="header" href="#can-you-add-language-x">Can you add language X?</a></h1>
 <p>Yes, but you'll need to <strong>get it working in your own Lute first</strong>.</p>
 <p>Once you've figured out good language settings, please open an "Add language" <a href="https://github.com/luteorg/lute-v3/issues/new/choose">GitHub issue</a>.  Thank you!</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="can-i-add-a-special-font-for-a-language"><a class="header" href="#can-i-add-a-special-font-for-a-language">Can I add a special font for a language?</a></h1>
+<p>Some languages require custom fonts to be displayed correctly.  To have those fonts displayed correctly, you need to install the font, and add some custom CSS to ensure that the font is used for the language that needs it.</p>
+<h2 id="1-download-and-install-the-font-needed"><a class="header" href="#1-download-and-install-the-font-needed">1. Download and install the font needed.</a></h2>
+<p>Install them as you would normally do.</p>
+<h2 id="2-get-the-id-of-the-language-that-will-use-the-font"><a class="header" href="#2-get-the-id-of-the-language-that-will-use-the-font">2. Get the id of the language that will use the font.</a></h2>
+<p>Go to Settings &gt; Languages, and click on the language.  The language ID will be at the end of the URL, e.g. <code>localhost:5001/language/edit/2</code></p>
+<h2 id="3-add-a-custom-style-to-tell-the-language-to-use-the-font"><a class="header" href="#3-add-a-custom-style-to-tell-the-language-to-use-the-font">3. Add a custom style to tell the language to use the font.</a></h2>
+<p>In Settings &gt; Settings &gt; Custom Styles, paste the following, changing the language id and the name of the font:</p>
+<pre><code>span.textitem[data-lang-id="X"]{ font-family:"X"; }
+</code></pre>
+<p>For example:</p>
+<pre><code>span.textitem[data-lang-id="46"]{ font-family:"Mongolian Writing Regular"; }
+</code></pre>
+<p>With this, the font will only by applied to that particular language.</p>
+<p>You may also want to change the size of the font:</p>
+<pre><code>span.textitem[data-lang-id="46"]{ font-size: 25px; }
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="where-can-i-find-books-to-import"><a class="header" href="#where-can-i-find-books-to-import">Where can I find books to import?</a></h1>
 <p>On the internet!</p>
 <p>But, since you asked, some of my favorites:</p>
