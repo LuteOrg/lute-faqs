@@ -33,6 +33,7 @@
 # Terms
 
 - [Why can't I change a Term?](./terms/terms-cannot-be-changed-once-created.md)
+- [Why do Terms only have one definition?](./terms/terms-only-have-one-definition.md)
 - [Where are my new Term's sentences?](./terms/sentences-only-shown-when-page-is-read.md)
 - [How should I use statuses?](./terms/term-statuses.md)
 - [What are Term parents?](./terms/term-parents.md)
