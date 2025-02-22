@@ -165,12 +165,16 @@
 <p>Reasons for this restriction:</p>
 <ul>
 <li>
-<p>a typo or other mistake would cause previously entered information to get accidentally overwritten.  For example, if you'd created a Spanish Term and translation "chico / boy", and then accidentally edited another existing term "CHICA / girl" to "chic<strong>o</strong> / girl" (accidentally hitting "o" instead of "a") and saved it, the existing "chico / boy" term would be updated instead.</p>
-</li>
-<li>
 <p>During reading, if you click on an unknown word, and decide to change the term's capitalization, Lute won't let you mis-type the word.  For example, if you're reading a shocking Spanish newspaper article about "GATOS SALVAJES" (wild cats!), you might want to save the term "GATOS", but as lowercase "gatos".  Lute stops you from typing "gattos" during the fix, so the new term is created correctly.</p>
 </li>
+<li>
+<p>changing a term can cause unexpected data and/or behaviour.  For example, if you're reading Spanish, and click on the term "gatito", but edit it to "gato", what is the intent?  "Gatito" would not be updated on the reading pane.  You'd be creating another term, if it didn't already exist.  Also, sometimes people misunderstand Lute terms, and enter various inflections or plural forms of words in the term box (e.g., they change "cats" to "cats (cat)", or similar) ... this would result in terms that Lute would never end up using.</p>
+</li>
+<li>
+<p>suppose I have the word Spanish "tengo", with the translation "to have".  Then I decide that this should really be "tener", so I edit it ... but now "tengo" has been lost.</p>
+</li>
 </ul>
+<p>When I was developing Lute, the idea of changing a word's spelling just felt wrong -- a word is a word, and me changing it doesn't mean the word itself has changed, if that makes sense.</p>
 
                     </main>
 
@@ -180,7 +184,7 @@
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../terms/sentences-only-shown-when-page-is-read.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../terms/terms-only-have-one-definition.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -194,7 +198,7 @@
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../terms/sentences-only-shown-when-page-is-read.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../terms/terms-only-have-one-definition.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

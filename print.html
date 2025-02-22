@@ -536,11 +536,34 @@ http {
 <p>Reasons for this restriction:</p>
 <ul>
 <li>
-<p>a typo or other mistake would cause previously entered information to get accidentally overwritten.  For example, if you'd created a Spanish Term and translation "chico / boy", and then accidentally edited another existing term "CHICA / girl" to "chic<strong>o</strong> / girl" (accidentally hitting "o" instead of "a") and saved it, the existing "chico / boy" term would be updated instead.</p>
-</li>
-<li>
 <p>During reading, if you click on an unknown word, and decide to change the term's capitalization, Lute won't let you mis-type the word.  For example, if you're reading a shocking Spanish newspaper article about "GATOS SALVAJES" (wild cats!), you might want to save the term "GATOS", but as lowercase "gatos".  Lute stops you from typing "gattos" during the fix, so the new term is created correctly.</p>
 </li>
+<li>
+<p>changing a term can cause unexpected data and/or behaviour.  For example, if you're reading Spanish, and click on the term "gatito", but edit it to "gato", what is the intent?  "Gatito" would not be updated on the reading pane.  You'd be creating another term, if it didn't already exist.  Also, sometimes people misunderstand Lute terms, and enter various inflections or plural forms of words in the term box (e.g., they change "cats" to "cats (cat)", or similar) ... this would result in terms that Lute would never end up using.</p>
+</li>
+<li>
+<p>suppose I have the word Spanish "tengo", with the translation "to have".  Then I decide that this should really be "tener", so I edit it ... but now "tengo" has been lost.</p>
+</li>
+</ul>
+<p>When I was developing Lute, the idea of changing a word's spelling just felt wrong -- a word is a word, and me changing it doesn't mean the word itself has changed, if that makes sense.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="why-do-terms-only-have-one-definition"><a class="header" href="#why-do-terms-only-have-one-definition">Why do Terms only have one definition?</a></h1>
+<p>Some words don't just mean one thing.  For example, in German, "Arm" can mean either the body part ("Mein Arm tut weh", "my arm hurts"), or poor ("Der Mann ist arm", "the man is poor"); in English, "can" means different things in the sentences "he can play guitar" vs "he drank a can of pop".</p>
+<p>There have been requests to allow for <a href="https://github.com/LuteOrg/lute-v3/issues/198">multiple translation fields</a>, with different statuses and parents for each of these, to allow for multiple shades of meaning.</p>
+<p>Currently Lute only allows for a single translation (and single status) for each word.  That's not really an accurate model for real world language, but it vastly simplifies usage and coding.</p>
+<p>First, as a user, I don't want to get buried in managing different statuses etc. for shades of meanings of a word.  Granted, I could potentially only use a single definition box and status for a term, even if that doesn't quite match the real "mental model" of a language.  For example, my "Arm" entry could have "1. arm (body part); 2. poor.", and I might know the first definition very well but not the second!</p>
+<p>The real challenges for this come on the implementation and usability side.  Given the German "Arm/arm" example above, here are some initial questions:</p>
+<ul>
+<li>For reading, Lute renders different statuses as different colors.  Given the sentence "Arme Jungen sind hier," which could be eiher "Arm" or "arm", I'm not sure how the UI should behave.  Default to the lowest status?  Show some combination of colors?</li>
+<li>Currently page rendering outputs the word id and status id as part of the data for each element, which are used by hotkeys and various actions.  Hotkeys would either no longer function, or only function in bulk, if a word had multiple statuses.</li>
+<li>Parent selection would need to change.  For "Die armen Jungen", "armen" would need the parent "Arm (poor)" vs "Arm (arm)".</li>
+<li>CSV imports would likely not be possible for terms with multiple meanings.  If my CSV file had "arm / poor", would that be an update to an existing definition, or would it be a brand new row?  Or would there need to be some way to disambiguate the data, i.e. with a new "disambiguation key" field in the UI?</li>
+<li>One feature that Lute needs (in my opinion) is the ability to select specific sentences from texts, and associate with them with terms. Currently Lute just looks up recent sentences for a term.  If a term has multiple definitions, then the sentences would need to be associated with those different definitions ... somehow.  It makes sense to think of things that way, but in my mind this starts to feel rather unwieldy as a user.</li>
+<li>Anki exports currently run for Terms.  If I wanted to export a different meaning, the Anki export would need to have an intermediate step where users select the term and then the meaning to export.  (It’s actually tricky to manage no matter what you do ... Anki and AnkiConnect don’t like duplicate "note keys" ...)</li>
+</ul>
+<p>In terms of database design, there are a couple of options:</p>
+<ul>
+<li>option 1: remove the uniqueness constraint of the word in the <code>words</code> table.</li>
+<li>option 2, way way harder: create a <code>wordmeanings</code> table, move most of the current <code>words</code> table fields over there, change all relationships code etc ... have fun with that.</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="where-are-my-new-terms-sentences"><a class="header" href="#where-are-my-new-terms-sentences">Where are my new Term's sentences?</a></h1>
 <p>Lute shows sentences for a Term and its siblings when you click the Sentences link on the Term form, but it only includes sentences for pages marked as "read".  Pages are marked as "read" when you click either of the links at the bottom of the reading page:</p>
