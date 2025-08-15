@@ -25,29 +25,42 @@
         <link rel="stylesheet" href="fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="highlight.css">
-        <link rel="stylesheet" href="tomorrow-night.css">
-        <link rel="stylesheet" href="ayu-highlight.css">
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
         <link rel="stylesheet" href="css/custom.css">
 
 
-        <!-- Provide site root to javascript -->
+        <!-- Provide site root and default themes to javascript -->
         <script>
-            var path_to_root = "";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "rust";
+            const path_to_root = "";
+            const default_light_theme = "rust";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc.js"></script>
     </head>
     <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
     <div id="body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                var theme = localStorage.getItem('mdbook-theme');
-                var sidebar = localStorage.getItem('mdbook-sidebar');
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -61,7 +74,8 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            var theme;
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             const html = document.documentElement;
@@ -74,17 +88,20 @@
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            var sidebar = null;
-            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
+                sidebar_toggle.checked = false;
             }
-            sidebar_toggle.checked = sidebar === 'visible';
-            html.classList.remove('sidebar-visible');
-            html.classList.add("sidebar-" + sidebar);
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
@@ -111,13 +128,14 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
@@ -137,7 +155,12 @@
 
                 <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
-                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
                     </form>
                     <div id="searchresults-outer" class="searchresults-outer hidden">
                         <div id="searchresults-header" class="searchresults-header"></div>
@@ -199,149 +222,348 @@ BACKUP_PATH: /full/path/to/backup/folder
 <h2 id="docker"><a class="header" href="#docker">Docker</a></h2>
 <p>Docker users should change their docker-compose.yml to map the USB key folder to the mounted /lute/data directory.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="can-i-deploy-lute-on-nixos"><a class="header" href="#can-i-deploy-lute-on-nixos">Can I deploy Lute on NixOS?</a></h1>
-<p>Deploy Lute on NixOS in three simple steps using <a href="https://github.com/aksiksi/compose2nix">compose2nix</a>.</p>
-<h2 id="1-create-docker-composeyml"><a class="header" href="#1-create-docker-composeyml">1. Create <code>docker-compose.yml</code></a></h2>
-<pre><code class="language-yaml">name: 'lute'
-services:
-  lute:
-    image: jzohrab/lute3:latest
-    ports:
-      - 5006:5001
-    volumes:
-      - /var/lib/lute/data:/lute_data
-      - /var/lib/lute/backup:/lute_backup
-</code></pre>
-<h2 id="2-convert-to-nixos-module"><a class="header" href="#2-convert-to-nixos-module">2. Convert to NixOS Module</a></h2>
-<pre><code class="language-bash">$ nix run github:aksiksi/compose2nix
-</code></pre>
-<h2 id="3-import-the-module"><a class="header" href="#3-import-the-module">3. Import the Module</a></h2>
-<p>Add to your NixOS configuration:</p>
-<pre><code class="language-nix">imports = [
-  ./docker-compose.nix
-];
-</code></pre>
-<p>That's it! NixOS will handle all the necessary setup, including creating and setting permissions for the directories, when you rebuild your configuration.</p>
-<h1 id="updating-under-nixos"><a class="header" href="#updating-under-nixos">Updating under NixOS</a></h1>
-<p>If you install using docker/podman, you can update as root using</p>
-<pre><code class="language-bash">$ podman pull lute3:latest
-</code></pre>
-<p>and then restarting the system service or server</p>
-<p>if you want to do it automatically, here is a nix module to do so:</p>
-<pre><code class="language-nix">{
+<p>Yes, you can deploy Lute on NixOS by creating a dedicated Nix module. This approach encapsulates the application's configuration and dependencies, making it easy to manage.</p>
+<h2 id="installation"><a class="header" href="#installation">Installation</a></h2>
+<h3 id="1-create-the-lute-module"><a class="header" href="#1-create-the-lute-module">1. Create the Lute Module</a></h3>
+<p>First, create a new file named <code>lute.nix</code> in your NixOS configuration directory (e.g., <code>/etc/nixos/lute.nix</code>). This file defines all the necessary packages and the systemd service for Lute.</p>
+<pre><code class="language-nix"># /etc/nixos/lute.nix
+
+{
   config,
   lib,
   pkgs,
   ...
-}:
-with lib; let
-  cfg = config.services.containerUpdater;
-in {
-  options.services.containerUpdater = {
-    enable = mkEnableOption "automatic container updates";
+}: let
+  cfg = config.services.lute;
 
-    updateTime = mkOption {
-      type = types.str;
-      default = "Mon 02:00";
-      description = "When to run the container updates (systemd calendar format)";
+  python = pkgs.python311;
+  pythonPackages = python.pkgs;
+
+  platformdirs-pinned = let
+    pname = "platformdirs";
+    version = "3.11.0";
+  in
+    pythonPackages.buildPythonApplication {
+      inherit pname version;
+      format = "pyproject";
+      src = pkgs.fetchPypi {
+        inherit pname version;
+        hash = "sha256-z47lKjr9uWUHLcxlJDPgx+PkDPXqFHfNSzsdLrdUlbM=";
+      };
+      nativeBuildInputs = with pythonPackages; [
+        hatchling
+        hatch-vcs
+      ];
+      meta = with pkgs.lib; {
+        description = "A small library for determining appropriate platform-specific dirs";
+        homepage = "https://github.com/platformdirs/platformdirs";
+        license = licenses.mit;
+      };
     };
 
-    extraFlags = mkOption {
-      type = types.listOf types.str;
-      default = [];
-      description = "Additional flags to pass to podman pull";
+  waitress-pinned = let
+    pname = "waitress";
+    version = "2.1.2";
+  in
+    pythonPackages.buildPythonApplication {
+      inherit pname version;
+      format = "pyproject";
+      src = pkgs.fetchPypi {
+        inherit pname version;
+        hash = "sha256-eApAgsX7wP3movz+Xibm78Ho9CVzCGPAQIV2l4H1Hro=";
+      };
+      nativeBuildInputs = with pythonPackages; [
+        setuptools
+      ];
+      meta = with pkgs.lib; {
+        description = "A production-quality pure-Python WSGI server";
+        homepage = "https://github.com/Pylons/waitress";
+        license = licenses.mit;
+      };
     };
 
-    containers = mkOption {
-      type = types.listOf types.str;
-      default = [];
-      description = "List of specific containers to update. If empty, updates all containers.";
+  chardet-pkg = let
+    pname = "chardet";
+    version = "5.2.0";
+  in
+    pythonPackages.buildPythonApplication {
+      inherit pname version;
+      format = "pyproject";
+      src = pkgs.fetchPypi {
+        inherit pname version;
+        hash = "sha256-Gztv9HmoxBS8P6LAhSmVaVxKAm3NbQYzst0JLKOcHPc=";
+      };
+      nativeBuildInputs = with pythonPackages; [
+        setuptools
+      ];
+      meta = with pkgs.lib; {
+        description = "Universal character encoding detector for Python";
+        homepage = "https://github.com/chardet/chardet";
+        license = licenses.lgpl21Only;
+      };
     };
 
-    restartContainers = mkOption {
-      type = types.bool;
-      default = false;
-      description = "Whether to restart containers after updating";
+  subtitle-parser-pkg = let
+    pname = "subtitle_parser";
+    version = "2.0.1";
+  in
+    pythonPackages.buildPythonApplication {
+      inherit pname version;
+      format = "pyproject";
+      src = pkgs.fetchPypi {
+        inherit pname version;
+        hash = "sha256-EhWQdYbG/72979WcDuTzUCam2tbPh5CPP0pwsbtZ41M=";
+      };
+      nativeBuildInputs = with pythonPackages; [
+        poetry-core
+      ];
+      propagatedBuildInputs = with pythonPackages; [
+        chardet-pkg
+        future
+      ];
+      meta = with pkgs.lib; {
+        description = "A Python library for parsing subtitle files";
+        homepage = "https://github.com/emre/subtitle-parser";
+        license = licenses.mit;
+      };
     };
-  };
 
-  config = mkIf cfg.enable {
-    systemd.services.containerUpdater = {
-      description = "Update container images";
-      path = [pkgs.podman];
-      script = ''
-        # Function to update containers
-        update_containers() {
-          local containers=()
+  openepub-pkg = let
+    pname = "openepub";
+    version = "0.0.9";
+  in
+    pythonPackages.buildPythonApplication {
+      inherit pname version;
+      format = "pyproject";
+      src = pkgs.fetchPypi {
+        inherit pname version;
+        hash = "sha256-qki9VVUn/zMXIkzQ+Zu5D3CXGpBbO97xRVfttYMrR9s=";
+      };
+      nativeBuildInputs = with pythonPackages; [
+        hatchling
+      ];
+      propagatedBuildInputs = with pythonPackages; [
+        beautifulsoup4
+        xmltodict
+      ];
+      meta = with pkgs.lib; {
+        description = "A simple epub parser";
+        homepage = "https://github.com/gaohongnan/openepub";
+        license = licenses.mit;
+      };
+    };
 
-          # If specific containers are specified, use those
-          if [ ''${#containerList[@]} -gt 0 ]; then
-            containers=("''${containerList[@]}")
-          else
-            # Otherwise get all running containers
-            while IFS= read -r line; do
-              containers+=("$line")
-            done &lt; &lt;(podman ps -a --format="{{.Image}}" | sort -u)
-          fi
+  natto-py-pkg = let
+    pname = "natto-py";
+    version = "1.0.1";
+  in
+    pythonPackages.buildPythonApplication {
+      inherit pname version;
+      format = "setuptools";
+      src = pkgs.fetchPypi {
+        inherit pname version;
+        hash = "sha256-dgEDuzlyMu4DPJkk0TV+MrFCu+Ey/GpDuM+C3WtlToY=";
+      };
+      nativeBuildInputs = [pkgs.mecab];
+      propagatedBuildInputs = with pythonPackages; [cffi];
 
-          # Update each container
-          for image in "''${containers[@]}"; do
-            echo "Updating container image: $image"
-            podman pull ''${pullFlags[@]} "$image"
+      meta = with pkgs.lib; {
+        description = "A Python wrapper for MeCab";
+        homepage = "https://github.com/buruzaemon/natto-py";
+        license = licenses.bsd3;
+      };
+    };
 
-            if [ "$RESTART_CONTAINERS" = "true" ]; then
-              container_ids=$(podman ps -q --filter "ancestor=$image")
-              if [ -n "$container_ids" ]; then
-                echo "Restarting containers using image: $image"
-                echo "$container_ids" | xargs -r podman restart
-              fi
-            fi
-          done
-        }
+  jaconv-pkg = let
+    pname = "jaconv";
+    version = "0.3.4";
+  in
+    pythonPackages.buildPythonApplication {
+      inherit pname version;
+      format = "setuptools";
+      src = pkgs.fetchPypi {
+        inherit pname version;
+        hash = "sha256-nnxV8/Cw4tutYvbJ+gww/G//27eCl5VVCdkIVrOjHW0=";
+      };
+      meta = with pkgs.lib; {
+        description = "A Japanese character converter";
+        homepage = "https://github.com/ikegami-yukino/jaconv";
+        license = licenses.mit;
+      };
+    };
 
-        # Set up environment variables
-        declare -a containerList=(${escapeShellArgs cfg.containers})
-        declare -a pullFlags=(${escapeShellArgs cfg.extraFlags})
-        RESTART_CONTAINERS="${boolToString cfg.restartContainers}"
+  lute-pkg = let
+    pname = "lute3";
+    version = "3.10.1";
+  in
+    pythonPackages.buildPythonApplication {
+      inherit pname version;
+      format = "pyproject";
 
-        # Run the update
-        update_containers
+      src = pkgs.fetchPypi {
+        inherit pname version;
+        hash = "sha256-gqwoyINuP54ve6R2OonLUT2oZYmpjvUopyWbJ+stJrE=";
+      };
+
+      nativeBuildInputs = with pythonPackages; [
+        flit-core
+      ];
+
+      propagatedBuildInputs = with pythonPackages; [
+        flask
+        flask-sqlalchemy
+        sqlalchemy
+        pyyaml
+        flask-wtf
+        platformdirs-pinned
+        requests
+        beautifulsoup4
+        toml
+        waitress-pinned
+        openepub-pkg
+        pyparsing
+        pypdf
+        subtitle-parser-pkg
+        ahocorapy
+        natto-py-pkg
+        jaconv-pkg
+      ];
+
+      postInstall = ''
+        mkdir -p $out/${python.sitePackages}/lute/data
       '';
 
+      meta = with pkgs.lib; {
+        description = "A language learning web application (v3)";
+        homepage = "https://github.com/LuteOrg/lute-v3";
+        license = licenses.mit;
+      };
+    };
+in {
+  options.services.lute = {
+    enable = lib.mkEnableOption "enable lute language server";
+
+    package = lib.mkOption {
+      type = lib.types.package;
+      default = lute-pkg;
+      description = "The Lute package to use for the service.";
+    };
+
+    dataDir = lib.mkOption {
+      type = lib.types.path;
+      default = "/var/lib/lute/data";
+      description = "Directory to store Lute's database and user files.";
+    };
+
+    backupDir = lib.mkOption {
+      type = lib.types.path;
+      default = "/var/lib/lute/backup";
+      description = "Directory where Lute will store its backups.";
+    };
+
+    port = lib.mkOption {
+      type = lib.types.port;
+      default = 5006;
+      description = "Port for Lute to listen on.";
+    };
+
+    openFirewall = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Whether to automatically open the configured port in the firewall.";
+    };
+  };
+
+  config = lib.mkIf cfg.enable {
+    environment.etc."lute.yml" = {
+      text = ''
+        # Lute configuration file, managed by NixOS.
+        ENV: prod
+        DBNAME: lute.db
+        DATAPATH: ${cfg.dataDir}
+        BACKUP_PATH: ${cfg.backupDir}
+        MECAB_DICPATH: "${pkgs.mecab}/lib/mecab/dic/ipadic"
+      '';
+    };
+
+    users.users.lute = {
+      isSystemUser = true;
+      group = "lute";
+      description = "Lute service user";
+    };
+    users.groups.lute = {};
+
+    systemd.tmpfiles.rules = [
+      "d '${cfg.dataDir}' 0755 lute lute -"
+      "d '${cfg.backupDir}' 0755 lute lute -"
+    ];
+
+    systemd.services.lute = {
+      description = "Lute V3 Language Server";
+      after = ["network-online.target"];
+      wants = ["network-online.target"];
+      wantedBy = ["multi-user.target"];
+
       serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = false;
+        User = "lute";
+        Group = "lute";
+        ExecStart = "${cfg.package}/bin/lute --port ${toString cfg.port} --config /etc/lute.yml";
+        Type = "simple";
+        Restart = "on-failure";
+        RestartSec = "5s";
+        WorkingDirectory = cfg.dataDir;
       };
     };
 
-    systemd.timers.containerUpdater = {
-      wantedBy = ["timers.target"];
-      timerConfig = {
-        OnCalendar = cfg.updateTime;
-        Persistent = true;
-        Unit = "containerUpdater.service";
-      };
-    };
+    networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [cfg.port];
   };
 }
-
 </code></pre>
-<p>Just import it into your configuration,</p>
-<p>and then set the following options:</p>
-<pre><code class="language-nix">{ config, pkgs, ... }:
+<h3 id="2-import-and-enable-the-module"><a class="header" href="#2-import-and-enable-the-module">2. Import and Enable the Module</a></h3>
+<p>Next, open your main <code>configuration.nix</code> file and import the <code>lute.nix</code> module. Then, enable and configure the service.</p>
+<pre><code class="language-nix"># /etc/nixos/configuration.nix
+
+{ config, pkgs, ... }:
+
 {
-  imports = [ ./container-updater.nix ];
-  
-  services.containerUpdater = {
-    enable = true;
-    containers = [ "lute3:latest"  ];  # Specific containers to update
+  imports =
+    [ 
+      ./hardware-configuration.nix
+      ./lute.nix  # &lt;-- IMPORT THE MODULE
+    ];
 
-    # Optional configurations:
-    # updateTime = "Mon 02:00";  # When to run updates
-    # extraFlags = [  ];  # Additional podman pull flags
-    # restartContainers = true;  # Automatically restart containers after update
+  # ... other configuration ...
+
+  # 2. ENABLE AND CONFIGURE THE LUTE SERVICE
+  services.lute = {
+    enable = true;
+    # dataDir = "/var/lib/lute/data"; # Optional: Change the default data directory
+    # backupDir = "/var/lib/lute/backup"; # Optional: Change the default backup directory 
+    # port = 5006; # Optional: Change the default port
+    # openFirewall = true; # Optional: Open the port in the firewall
   };
+
+  # ... other configuration ...
 }
 </code></pre>
+<h3 id="3-rebuild-your-system"><a class="header" href="#3-rebuild-your-system">3. Rebuild Your System</a></h3>
+<p>Finally, apply the new configuration by running the standard rebuild command:</p>
+<pre><code class="language-bash">sudo nixos-rebuild switch
+</code></pre>
+<p>NixOS will build and install Lute and its dependencies, and the service will start automatically. You can then access Lute at <code>http://localhost:5006</code> (or the custom port you configured).</p>
+<h2 id="updating-lute"><a class="header" href="#updating-lute">Updating Lute</a></h2>
+<p>Because the version is pinned in the module for reproducibility, you must update it manually when a new version is released.</p>
+<ol>
+<li>
+<p><strong>Update Version</strong>: Find the latest version number on the Lute PyPI page. Open your <code>/etc/nixos/lute.nix</code> file and update the <code>version</code> string in the <code>lute-pkg</code> definition.</p>
+</li>
+<li>
+<p><strong>Update Hash</strong>: Run <code>sudo nixos-rebuild switch</code>. The build will fail because the hash for the new version is incorrect. The error message will provide the correct hash. Look for a line that says <code>got: sha256-...</code> and copy the new hash.</p>
+</li>
+<li>
+<p><strong>Finalize</strong>: Paste the new hash into the <code>hash</code> attribute for <code>lute-pkg</code> in <code>lute.nix</code> and run <code>sudo nixos-rebuild switch</code> one more time. The build will now succeed, and your Lute service will be updated.</p>
+</li>
+</ol>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="can-i-make-lute-secure"><a class="header" href="#can-i-make-lute-secure">Can I make Lute secure?</a></h1>
 <p>Lute doesn't come with authentication, so if you want to add security, the easiest way to do that is with a server that acts as a gatekeeper to the app (a reverse proxy).  The easiest way to do this is with Docker compose.</p>
 <blockquote>
@@ -492,13 +714,14 @@ http {
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="why-wont-my-epub-import-correctly"><a class="header" href="#why-wont-my-epub-import-correctly">Why won't my epub import correctly?</a></h1>
 <p>Lute uses an open source epub parser named <code>openepub</code> kindly created by a Lute user to avoid licensing issues with currently available epub parsers.</p>
-<p>The parser project is on GitHub at <a href="https://github.com/sakolkar/openepub">https://github.com/sakolkar/openepub</a>.<sup class="footnote-reference"><a href="#1">1</a></sup></p>
+<p>The parser project is on GitHub at <a href="https://github.com/sakolkar/openepub">https://github.com/sakolkar/openepub</a>.<sup class="footnote-reference" id="fr-1-1"><a href="#footnote-1">1</a></sup></p>
 <p>Parsing is always a challenge, and some epubs may contain strange formatting that the library can't handle.  If your epub doesn't parse correctly, please open a GitHub issue in the <code>openepub</code> repo.</p>
 <p>In the meantime, use any of the tools available to convert your epub to a text file for import, such as <a href="https://calibre-ebook.com/">Calibre</a>.</p>
-<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
-<p>as at Dec 28, 2023!</p>
-</div>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="why-wont-my-pdf-import-correctly"><a class="header" href="#why-wont-my-pdf-import-correctly">Why won't my pdf import correctly?</a></h1>
+<hr>
+<ol class="footnote-definition"><li id="footnote-1">
+<p>as at Dec 28, 2023! <a href="#fr-1-1">↩</a></p>
+</li>
+</ol><div style="break-before: page; page-break-before: always;"></div><h1 id="why-wont-my-pdf-import-correctly"><a class="header" href="#why-wont-my-pdf-import-correctly">Why won't my pdf import correctly?</a></h1>
 <p>Lute uses the <a href="https://pypi.org/project/PyPDF2/">PyPDF2</a> library for PDF imports.</p>
 <p>PDF imports sometimes add extra unwanted spaces: for example, the word "happiness" in your PDF may be imported as "happi ness".  For this reason, when you import your PDF, Lute will give you a warning that it may be inaccurate.</p>
 <p>This issue is not a problem with Lute, or even with the PyPDF2 library ... correctly parsing PDFs is actually <em>extremely</em> tough.  Per the authors of PyPDF2:</p>
@@ -512,17 +735,18 @@ http {
 </ul>
 <p>In summary, the best that we can do is say that PDF imports are not perfect, and you should be aware of that while reading.  You can edit each page as you come across problems, or just ignore the incorrect words.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="my-text-file-import-is-giving-a-utf-8-encoding-error-message"><a class="header" href="#my-text-file-import-is-giving-a-utf-8-encoding-error-message">My text file import is giving a "utf-8 encoding" error message</a></h1>
-<p>Lute can only import utf-8 encoded text files.<sup class="footnote-reference"><a href="#1">1</a></sup></p>
+<p>Lute can only import utf-8 encoded text files.<sup class="footnote-reference" id="fr-1-1"><a href="#footnote-1">1</a></sup></p>
 <p>Your file may already be in utf-8 encoding, but if not, you'll need to first convert it.</p>
 <p>I don't know of all of the options available, but here are some suggestions:</p>
 <ul>
 <li><a href="https://subtitletools.com/convert-text-files-to-utf8-online">https://subtitletools.com/convert-text-files-to-utf8-online</a></li>
 <li>if using Microsoft Word, you can export your file, but you have to choose "other encoding" and then unicode (utf-8).  See e.g. <a href="https://support.3playmedia.com/hc/en-us/articles/227730088-Exporting-a-UTF-8-txt-file-from-Word">https://support.3playmedia.com/hc/en-us/articles/227730088-Exporting-a-UTF-8-txt-file-from-Word</a></li>
 </ul>
-<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
-<p><a href="https://en.wikipedia.org/wiki/UTF-8">https://en.wikipedia.org/wiki/UTF-8</a>: "UTF-8 is a variable-length character encoding standard used for electronic communication."  It defines how characters are actually written to disk, essentially.</p>
-</div>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="i-cant-click-on-words-in-the-reading-screen"><a class="header" href="#i-cant-click-on-words-in-the-reading-screen">I can't click on words in the reading screen</a></h1>
+<hr>
+<ol class="footnote-definition"><li id="footnote-1">
+<p><a href="https://en.wikipedia.org/wiki/UTF-8">https://en.wikipedia.org/wiki/UTF-8</a>: "UTF-8 is a variable-length character encoding standard used for electronic communication."  It defines how characters are actually written to disk, essentially. <a href="#fr-1-1">↩</a></p>
+</li>
+</ol><div style="break-before: page; page-break-before: always;"></div><h1 id="i-cant-click-on-words-in-the-reading-screen"><a class="header" href="#i-cant-click-on-words-in-the-reading-screen">I can't click on words in the reading screen</a></h1>
 <p>Though Lute was developed primarily for desktop use, some users connect to Lute on their mobile devices (see <a href="reading/../setup/mobile-support.html">Mobile support</a> and <a href="http://localhost:3000/usage/reading-on-mobile.html">Reading on mobile</a>).  Lute tries to set up a desktop or mobile environment automatically, but sometimes it's hard to determine if you're on mobile or not[^1].  Sometimes it's not even possible: for example, you may have a regular laptop with an additional external touchscreen ...</p>
 <p>If your reading screen isn't responding to clicks or touches, you may need to tell Lute what kinds of screen interactions you need.  In the slideout menu of the reading menu, you can do that:</p>
 <img width="285" alt="image" src="reading/../assets/reading/screen_interactions.png">
@@ -634,7 +858,7 @@ http {
 <li>why was feature Y added before feature Z?</li>
 </ul>
 <p>These are all great questions, and at the moment there's really not a good answer in the normal "product" sense.</p>
-<p>The goal is for Lute, or something a lot like it, to become a default viable tool for a large user base.  At the moment, the steps for getting there are not planned or roadmapped like a regular product would be: good planning takes a lot of time and energy.  Lute's free and open source, so I and others work on it as we can<sup class="footnote-reference"><a href="#testing">1</a></sup>.</p>
+<p>The goal is for Lute, or something a lot like it, to become a default viable tool for a large user base.  At the moment, the steps for getting there are not planned or roadmapped like a regular product would be: good planning takes a lot of time and energy.  Lute's free and open source, so I and others work on it as we can<sup class="footnote-reference" id="fr-testing-1"><a href="#footnote-testing">1</a></sup>.</p>
 <p>Lute's got a big backlog of issues and ideas.  You may be wondering why your small request has been sitting in the queue since like <em>forever</em>.  There are some criteria I use to pick what to work on:</p>
 <ul>
 <li><strong>Relative size of work:</strong> how fast/easy it is to design, code, test, and document.  Sometimes small-seeming things aren't feasible.  E.g., "Couldn't you just query the database and tell me how many unknown words are in my book?"  No, unfortunately, because of the way that Lute stores data.  (It seems like it would be easy, right?  But it's not.)  Some requests are intertwined with others, or fundamentally don't follow Lute's technical design.  All good, but big changes take time.</li>
@@ -644,10 +868,11 @@ http {
 <li><strong>Differentiators:</strong> there are a few things that could make a big difference to learning.  With Lute, term images and parent terms were two of the initial things that drove me to write it in the first place.  I think that there are others as well: "word families", "sentence notes", and of course AI integration ... all of these might just be personal projects and thoughts though, I'm not sure!</li>
 </ul>
 <p>Lute's open source, so anyone is welcome to make forks and tweak it for their own learning and fun.  But most of us want to just <em>get on with it</em>.</p>
-<div class="footnote-definition" id="testing"><sup class="footnote-definition-label">1</sup>
-<p>"Work on it as we can" sounds chaotic.  To counteract this chaos, Lute has a decent set of automated tests and checks to ensure that the code is viable.</p>
-</div>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="can-i-contribute-to-lutes-code"><a class="header" href="#can-i-contribute-to-lutes-code">Can I contribute to Lute's code?</a></h1>
+<hr>
+<ol class="footnote-definition"><li id="footnote-testing">
+<p>"Work on it as we can" sounds chaotic.  To counteract this chaos, Lute has a decent set of automated tests and checks to ensure that the code is viable. <a href="#fr-testing-1">↩</a></p>
+</li>
+</ol><div style="break-before: page; page-break-before: always;"></div><h1 id="can-i-contribute-to-lutes-code"><a class="header" href="#can-i-contribute-to-lutes-code">Can I contribute to Lute's code?</a></h1>
 <p>Yes please!</p>
 <p>Lute is supposed to be open source and free software, so you can do what you'd like with it.</p>
 <p>If you want to have your work be part of the "official" Lute releases, check out the <a href="https://github.com/LuteOrg/lute-v3/wiki">Lute wiki</a>.</p>
@@ -678,7 +903,7 @@ http {
 </div>
 <p>Export this to a .csv file, and import it into Lute.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="why-doesnt-lute-have-flashcards-or-an-srs"><a class="header" href="#why-doesnt-lute-have-flashcards-or-an-srs">Why doesn't Lute have flashcards, or an SRS?</a></h1>
-<p>I do feel that SRS<sup class="footnote-reference"><a href="#1">1</a></sup> plays an important role in language learning (if you like using SRS!).</p>
+<p>I do feel that SRS<sup class="footnote-reference" id="fr-1-1"><a href="#footnote-1">1</a></sup> plays an important role in language learning (if you like using SRS!).</p>
 <p>Lute currently doesn't have a "testing" mode or SRS for a few reasons:</p>
 <ul>
 <li>The core feature of Lute is reading, so I have been focused on making reading and parsing the most pleasant experience.  To me, testing is sort of outside of this.</li>
@@ -694,10 +919,11 @@ http {
 </ul>
 <p>I would rather keep Lute focused on reading, and delegate testing to something that is dedicated to that -- like Anki.  There is an issue for <a href="https://github.com/luteorg/lute-v3/issues/3">Anki export</a>.  Then there would need to be a feedback loop for statuses to get updated, etc.</p>
 <p>Lute is open-sourced software, though, so if someone feels a burning need to implement an SRS in Lute, they are welcome to do it.  For it to be included in the main Lute package, the code would need to pass the various quality checks, and would also need to have sufficient testing and documentation (user docs and technical docs).  It could also be written as a standalone app that interfaces with the Lute database, or perhaps via an API.</p>
-<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
-<p>Spaced Repetition Software</p>
-</div>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="why-is-this-free"><a class="header" href="#why-is-this-free">Why is this free?</a></h1>
+<hr>
+<ol class="footnote-definition"><li id="footnote-1">
+<p>Spaced Repetition Software <a href="#fr-1-1">↩</a></p>
+</li>
+</ol><div style="break-before: page; page-break-before: always;"></div><h1 id="why-is-this-free"><a class="header" href="#why-is-this-free">Why is this free?</a></h1>
 <p>Lute is and will always remain free for a few reasons.</p>
 <ol>
 <li>
@@ -752,6 +978,7 @@ http {
             window.setTimeout(window.print, 100);
         });
         </script>
+
 
     </div>
     </body>
